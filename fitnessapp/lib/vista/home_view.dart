@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/vista/login_view.dart';
+import 'package:fitnessapp/vista/login_screen.dart'; // NUEVA IMPORTACIÓN
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -26,7 +27,10 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: () {
-                  // Aún no implementado
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4DB6AC),
