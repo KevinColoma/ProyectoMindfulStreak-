@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:fitnessapp/vista/login_view.dart';
-import 'package:fitnessapp/vista/login_screen.dart'; // NUEVA IMPORTACIÓN
+import 'package:fitnessapp/vista/login_screen.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(begin: 4.0, end: 12.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +42,33 @@ class HomeView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFF00796B),
+                        width: _animation.value,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'assets/fit1.png',
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 40),
               const Text(
-                'Bienvenido a FitnessApp',
+                'Bienvenido a MindfulStreak',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
