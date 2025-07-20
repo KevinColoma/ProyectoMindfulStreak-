@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'editar_perfil_view.dart';
 
 class PerfilView extends StatefulWidget {
   final String userId;
@@ -32,6 +33,25 @@ class _PerfilViewState extends State<PerfilView> {
     });
   }
 
+  void _editarPerfil(BuildContext context) async {
+    if (_perfil == null) return;
+    
+    final resultado = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditarPerfilView(
+          userId: widget.userId,
+          perfilActual: _perfil!,
+        ),
+      ),
+    );
+    
+    // Recargar perfil si se actualizó
+    if (resultado == true) {
+      _cargarPerfil();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_perfil == null) {
@@ -46,6 +66,12 @@ class _PerfilViewState extends State<PerfilView> {
       appBar: AppBar(
         title: const Text('Mi Perfil'),
         backgroundColor: const Color(0xFF00796B),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit, color: Colors.white),
+            onPressed: () => _editarPerfil(context),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -70,14 +96,19 @@ class _PerfilViewState extends State<PerfilView> {
                 child: CircleAvatar(
                   radius: 50,
                   backgroundColor: Colors.teal[100],
-                  child: Text(
-                    _perfil!['nombre'][0].toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 40,
-                      color: Colors.teal,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  backgroundImage: _perfil!['avatar_url'] != null
+                      ? NetworkImage(_perfil!['avatar_url'])
+                      : null,
+                  child: _perfil!['avatar_url'] == null
+                      ? Text(
+                          _perfil!['nombre'][0].toUpperCase(),
+                          style: const TextStyle(
+                            fontSize: 40,
+                            color: Colors.teal,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : null,
                 ),
               ),
             ),
